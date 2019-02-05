@@ -1,5 +1,7 @@
 # DotNETDevOps.EmailTemplating
 
+[![Build status](https://dev.azure.com/dotnet-devops/dotnetdevops/_apis/build/status/DotNETDevOps.EmailTemplating)](https://dev.azure.com/dotnet-devops/dotnetdevops/_build/latest?definitionId=3)
+
 Small abstraction used for email templating and ensuring that you only send the template/email once. Using table storage to block additional sends.
 
 ```cs
