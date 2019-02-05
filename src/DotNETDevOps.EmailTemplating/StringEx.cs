@@ -3,7 +3,7 @@ using System.Text;
 
 namespace DotNETDevOps.EmailTemplating
 {
-    internal static class StringEx
+    public static class StringExtensions
     {
         public static string CreateMD5(this string input)
         {
