@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -24,6 +25,33 @@ namespace DotNETDevOps.EmailTemplating.Razor
     public class ViewEmailRequirement : IAuthorizationRequirement
     {
 
+    }
+    public class ViewEmailRequirementHandlerOptions
+    {
+        public string ClientId { get; set; }
+    }
+    public class ViewEmailRequirementHandler : AuthorizationHandler<ViewEmailRequirement, EmailResource>
+    {
+        private readonly IOptions<ViewEmailRequirementHandlerOptions> options;
+
+        public ViewEmailRequirementHandler(IOptions<ViewEmailRequirementHandlerOptions> options)
+        {
+            this.options = options ?? throw new ArgumentNullException(nameof(options));
+        }
+
+        protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, ViewEmailRequirement requirement, EmailResource resource)
+        {
+            if (context.User.FindFirstValue("email_id") == resource.Id)
+                context.Succeed(requirement);
+
+            if (context.User.FindFirstValue("client_id") == options.Value.ClientId && !context.User.HasClaim(c => c.Type == "sub"))
+            {
+                context.Succeed(requirement);
+            }
+             
+
+            return Task.CompletedTask;
+        }
     }
 
     public class EmailPageModel : PageModel
