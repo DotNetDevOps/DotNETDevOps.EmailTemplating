@@ -75,6 +75,16 @@ namespace DotNETDevOps.EmailTemplating
 
                 }
 
+                var emailArchive = emailContext.StorageAccount.CreateCloudBlobClient().GetContainerReference("emails");
+                await emailArchive.CreateIfNotExistsAsync();
+                var persisted = emailArchive.GetBlockBlobReference($"{emailId.CreateMD5()}.html");
+                persisted.Metadata["emailid"] = emailId;
+                persisted.Metadata["content"] = entity.ContentMD5;
+                persisted.Metadata["subject"] = entity.SubjectMD5;
+                persisted.Metadata["target"] = entity.TargetMD5;
+
+                await persisted.UploadTextAsync(msg);
+
                 unique_args = unique_args ?? new Dictionary<string, string>
                 {
 

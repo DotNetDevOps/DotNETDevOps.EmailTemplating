@@ -2,6 +2,8 @@
 using Microsoft.WindowsAzure.Storage;
 using SInnovations.Azure.TableStorageRepository;
 using SInnovations.Azure.TableStorageRepository.TableRepositories;
+using System;
+using System.Globalization;
 
 namespace DotNETDevOps.EmailTemplating
 {
@@ -32,5 +34,23 @@ namespace DotNETDevOps.EmailTemplating
 
         public ITableRepository<EmailSendtModel> Emails { get; set; }
         public ITableRepository<EmailTemplateModel> EmailsTemplateModels { get; set; }
+    }
+
+    internal static class DatetimeExtensions
+    {
+        public static DateTimeOffset Trim(this DateTimeOffset date, long roundTicks)
+        {
+            return new DateTimeOffset(date.Ticks - date.Ticks % roundTicks, date.Offset);
+        }
+        public static string TrimToDayReversedDateTime(this DateTimeOffset time)
+        {
+            if (time == DateTimeOffset.MaxValue)
+                return "";
+
+            var inverseTimeKey = DateTimeOffset.MaxValue.Subtract(time.Trim(TimeSpan.TicksPerDay)).Ticks;
+
+            return inverseTimeKey.ToString("d19", CultureInfo.InvariantCulture);
+
+        }
     }
 }
