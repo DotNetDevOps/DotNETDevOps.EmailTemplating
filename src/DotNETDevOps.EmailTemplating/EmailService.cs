@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace DotNETDevOps.EmailTemplating
 {
-    public class EmailService
+    public class EmailService :IEmailService
     {
         private readonly EmailTemplatingOptions emailTemplateOptions;
         private readonly SendgridConfiguration sendgridConfiguration;
