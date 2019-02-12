@@ -29,6 +29,7 @@ namespace DotNETDevOps.EmailTemplating.Razor
     public class ViewEmailRequirementHandlerOptions
     {
         public string ClientId { get; set; }
+        public string AllowedRoles { get; set; }
     }
     public class ViewEmailRequirementHandler : AuthorizationHandler<ViewEmailRequirement, EmailResource>
     {
@@ -49,6 +50,9 @@ namespace DotNETDevOps.EmailTemplating.Razor
                 context.Succeed(requirement);
             }
              
+            if( !string.IsNullOrEmpty(options.Value.AllowedRoles) && options.Value.AllowedRoles.Split(',').Any(role=> context.User.IsInRole(role))){
+                context.Succeed(requirement);
+            }
 
             return Task.CompletedTask;
         }
