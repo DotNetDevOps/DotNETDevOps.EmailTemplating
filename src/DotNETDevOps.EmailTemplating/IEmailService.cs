@@ -8,6 +8,6 @@ namespace DotNETDevOps.EmailTemplating
 {
     public interface IEmailService
     {
-        Task SendAsync(string emailId, string to, string subject, string msg, bool opentrack = false, bool clicktrack = false, IDictionary<string, string> unique_args = null, ILogger logger = null, string from = null, DateTimeOffset? time = null, params LinkedResource[] linkedResources);
+        Task<bool> SendAsync(string emailId, string to, string subject, string msg, bool opentrack = false, bool clicktrack = false, IDictionary<string, string> unique_args = null, ILogger logger = null, string from = null, DateTimeOffset? time = null, params LinkedResource[] linkedResources);
     }
 }

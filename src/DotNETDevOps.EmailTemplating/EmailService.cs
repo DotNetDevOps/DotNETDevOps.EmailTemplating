@@ -30,7 +30,7 @@ namespace DotNETDevOps.EmailTemplating
             this.hostingEnvironment = hostingEnvironment ?? throw new ArgumentNullException(nameof(hostingEnvironment));
         }
 
-        public async Task SendAsync(string emailId, string to, string subject, string msg, bool opentrack = false, bool clicktrack = false, IDictionary<string, string> unique_args = null, ILogger logger = null, string from = null, DateTimeOffset? time = null, params LinkedResource[] linkedResources)
+        public async Task<bool> SendAsync(string emailId, string to, string subject, string msg, bool opentrack = false, bool clicktrack = false, IDictionary<string, string> unique_args = null, ILogger logger = null, string from = null, DateTimeOffset? time = null, params LinkedResource[] linkedResources)
         {
             logger = logger ?? this.logger;
 
@@ -51,7 +51,7 @@ namespace DotNETDevOps.EmailTemplating
                      ))
                 {
                     logger.LogInformation("Only production environment can send external emails, skipping");
-                    return;
+                    return false;
                 }
 
 
@@ -65,7 +65,7 @@ namespace DotNETDevOps.EmailTemplating
                     if (ex.RequestInformation.ExtendedErrorInformation.ErrorCode == "EntityAlreadyExists")
                     {
                         logger.LogInformation("Email have been send in the past, skipping");
-                        return;
+                        return false;
                     }
                     throw;
                 }
@@ -141,6 +141,8 @@ namespace DotNETDevOps.EmailTemplating
                 await smtpClient.SendMailAsync(mailMessage);
 
                 logger.LogInformation("Sending email '{subject}' to {entity} completed", subject, entity.TargetMD5);
+
+                return true;
             }
 
         }
