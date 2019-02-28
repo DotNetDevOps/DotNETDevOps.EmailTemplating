@@ -21,11 +21,11 @@ namespace DotNETDevOps.EmailTemplating
         {
             modelbuilder.Entity<EmailSendtModel>()
               .HasKeys(k => new { k.EmailId })
-              .WithKeyPropertyTransformation(k => k.EmailId, s => s.CreateMD5())
+              .WithKeyTransformation(k => k.EmailId, s => s.CreateMD5())
               .ToTable("emails");
             modelbuilder.Entity<EmailTemplateModel>()
              .HasKeys(k => new { k.EmailIdHash })
-             .WithKeyPropertyTransformation(k => k.EmailIdHash, s => $"template__{s}")
+             .WithKeyTransformation(k => k.EmailIdHash, s => $"template__{s}")
              .WithPropertyOf(k => k.Tags)
              .ToTable("emails");
 
